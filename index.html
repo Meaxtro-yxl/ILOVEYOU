@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang=zh-CN>
+<html lang="zh-CN">
 <head>
-<meta charset=UTF-8>
-<meta name=viewport content=width=device-width,initial-scale=1.0,user-scalable=no>
-<title>甜蜜点菜</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>鐢滆湝鐐硅彍</title>
 <style>
 :root{--pink:#E91E63;--pink-light:#FCE4EC;--warm:#FFF3E0;--green:#4CAF50;--orange:#FF9800;--gray:#9E9E9E;--card-shadow:0 2px 8px rgba(0,0,0,.08);--radius:16px;}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif;background:linear-gradient(135deg,#FCE4EC,#FFF3E0,#FCE4EC);min-height:100vh;display:flex;justify-content:center}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#FCE4EC,#FFF3E0,#FCE4EC);min-height:100vh;display:flex;justify-content:center}
 .app{width:100%;max-width:480px;min-height:100vh;display:flex;flex-direction:column;position:relative;padding-bottom:80px}
 
 .header{background:linear-gradient(135deg,#F8BBD0,#E91E63);color:#fff;padding:16px 20px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(233,30,99,.2)}
@@ -33,7 +33,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Microsoft
 .dish-info{flex:1;min-width:0}
 .dish-name{font-size:15px;font-weight:600;color:#333}
 .dish-price{font-size:13px;color:#E91E63;margin-top:2px}
-.dish-price::before{content:'¥'}
+.dish-price::before{content:'楼'}
 .qty-ctrl{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .qty-btn{width:30px;height:30px;border-radius:50%;border:2px solid #E91E63;background:#fff;color:#E91E63;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;line-height:1;padding:0}
 .qty-btn:active{background:#E91E63;color:#fff}
@@ -106,75 +106,75 @@ body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Microsoft
 </head>
 <body>
 
-<div class=app>
-  <div class=toast id=toast></div>
+<div class="app">
+  <div class="toast" id="toast"></div>
 
-  <div class=nick-modal id=nickModal>
-    <div class=nick-box>
-      <h2>🍽️ 甜蜜点菜</h2>
-      <p>输入你的昵称开始点菜吧</p>
-      <input id=nickInput placeholder=比如：宝宝 maxlength=8>
-      <button onclick=saveNick()>确认</button>
+  <div class="nick-modal" id="nickModal">
+    <div class="nick-box">
+      <h2>馃嵔锔?鐢滆湝鐐硅彍</h2>
+      <p>杈撳叆浣犵殑鏄电О寮€濮嬬偣鑿滃惂</p>
+      <input id="nickInput" placeholder="姣斿锛氬疂瀹? maxlength="8">
+      <button onclick="saveNick()">纭</button>
     </div>
   </div>
 
-  <div class=header>
-    <h1>💕 甜蜜点菜</h1>
-    <div class=sub>— 两个人的小厨房 —</div>
+  <div class="header">
+    <h1>馃挄 鐢滆湝鐐硅彍</h1>
+    <div class="sub">鈥?涓や釜浜虹殑灏忓帹鎴?鈥?/div>
   </div>
-  <div class=nickname-bar>
-    <span>👤 <span id=myNick>—</span></span>
-    <button onclick=changeNick()>换昵称</button>
-  </div>
-
-  <div class=tabs>
-    <div class=tab active onclick=switchTab('order')><span class=emoji>🍳</span>点菜</div>
-    <div class=tab onclick=switchTab('wish')><span class=emoji>💝</span>心愿菜单</div>
+  <div class="nickname-bar">
+    <span>馃懁 <span id="myNick">鈥?/span></span>
+    <button onclick="changeNick()">鎹㈡樀绉?/button>
   </div>
 
-  <div class=content id=content>
-    <div id=orderTab>
-      <div class=cat-scroll id=catScroll></div>
-      <div id=dishList></div>
-      <div class=add-custom onclick=showAddDish()>+ 自定义菜品</div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('order')"><span class="emoji">馃嵆</span>鐐硅彍</div>
+    <div class="tab" onclick="switchTab('wish')"><span class="emoji">馃挐</span>蹇冩効鑿滃崟</div>
+  </div>
+
+  <div class="content" id="content">
+    <div id="orderTab">
+      <div class="cat-scroll" id="catScroll"></div>
+      <div id="dishList"></div>
+      <div class="add-custom" onclick="showAddDish()">+ 鑷畾涔夎彍鍝?/div>
     </div>
-    <div id=wishTab style=display:none>
-      <div class=wish-input-wrap>
-        <input id=wishInput placeholder=今天想吃...？ maxlength=30>
-        <button onclick=sendWish()>发送</button>
+    <div id="wishTab" style="display:none">
+      <div class="wish-input-wrap">
+        <input id="wishInput" placeholder="浠婂ぉ鎯冲悆...锛? maxlength="30">
+        <button onclick="sendWish()">鍙戦€?/button>
       </div>
-      <div id=wishList></div>
-      <div id=wishResult></div>
+      <div id="wishList"></div>
+      <div id="wishResult"></div>
     </div>
   </div>
 </div>
 
-<div class=bottom-bar id=bottomBar>
-  <div class=summary id=orderSummary>暂无已选菜品</div>
-  <div class=total>
-    <span class=count id=orderCount>0 道菜</span>
-    <span class=price id=orderTotal>¥0</span>
+<div class="bottom-bar" id="bottomBar">
+  <div class="summary" id="orderSummary">鏆傛棤宸查€夎彍鍝?/div>
+  <div class="total">
+    <span class="count" id="orderCount">0 閬撹彍</span>
+    <span class="price" id="orderTotal">楼0</span>
   </div>
 </div>
 
-<div class=modal-overlay hidden id=dishModal>
-  <div class=modal>
-    <h3>添加自定义菜品</h3>
-    <input id=newDishName placeholder=菜名>
-    <input id=newDishPrice type=number placeholder=价格（元） step=0.01 min=0>
-    <select id=newDishCat>
-      <option value=荤菜>荤菜</option><option value=素菜>素菜</option>
-      <option value=汤品>汤品</option><option value=主食>主食</option><option value=饮品>饮品</option>
+<div class="modal-overlay hidden" id="dishModal">
+  <div class="modal">
+    <h3>娣诲姞鑷畾涔夎彍鍝?/h3>
+    <input id="newDishName" placeholder="鑿滃悕">
+    <input id="newDishPrice" type="number" placeholder="浠锋牸锛堝厓锛? step="0.01" min="0">
+    <select id="newDishCat">
+      <option value="鑽よ彍">鑽よ彍</option><option value="绱犺彍">绱犺彍</option>
+      <option value="姹ゅ搧">姹ゅ搧</option><option value="涓婚">涓婚</option><option value="楗搧">楗搧</option>
     </select>
-    <div class=modal-btns>
-      <button class=btn-cancel onclick=hideAddDish()>取消</button>
-      <button class=btn-confirm onclick=addCustomDish()>确认添加</button>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="hideAddDish()">鍙栨秷</button>
+      <button class="btn-confirm" onclick="addCustomDish()">纭娣诲姞</button>
     </div>
   </div>
 </div>
 
 <script>
-// === Supabase REST API 直连（无需 CDN） ===
+// === Supabase REST API 鐩磋繛锛堟棤闇€ CDN锛?===
 const SB_URL = 'https://xzoctfkbuxumntlvfjgo.supabase.co/rest/v1'
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6b2N0ZmtidXh1bW50bHZmamdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODcxMDAsImV4cCI6MjA5NjE2MzEwMH0.vDNGNRpnWlAvaY_FDL244Ujw0jYQL7nT-i3fg8S1KTY'
 
@@ -183,10 +183,11 @@ async function sbApi(method, path, body) {
   if (body) opts.body = JSON.stringify(body)
   const res = await fetch(SB_URL + path, opts)
   if (!res.ok) { const e = await res.text(); throw new Error('API ' + res.status + ': ' + e) }
-  return res.json()
+  const text = await res.text()
+  return text ? JSON.parse(text) : []
 }
 
-// === 全局状态 ===
+// === 鍏ㄥ眬鐘舵€?===
 let myNick = localStorage.getItem('couple_menu_nick') || ''
 let deviceId = localStorage.getItem('couple_menu_device_id') || crypto.randomUUID()
 localStorage.setItem('couple_menu_device_id', deviceId)
@@ -194,10 +195,10 @@ localStorage.setItem('couple_menu_device_id', deviceId)
 let dishes = []
 let orders = {}
 let wishes = []
-let activeCat = '全部'
+let activeCat = '鍏ㄩ儴'
 let pollTimer = null
 
-// === 初始化 ===
+// === 鍒濆鍖?===
 function init() {
   if (!myNick) {
     document.getElementById('nickModal').classList.remove('hidden')
@@ -210,7 +211,7 @@ function init() {
 
 function saveNick() {
   const v = document.getElementById('nickInput').value.trim()
-  if (!v) return toast('请输入昵称')
+  if (!v) return toast('璇疯緭鍏ユ樀绉?)
   myNick = v
   localStorage.setItem('couple_menu_nick', v)
   document.getElementById('myNick').textContent = myNick
@@ -223,7 +224,7 @@ function changeNick() {
   document.getElementById('nickModal').classList.remove('hidden')
 }
 
-// === 数据加载 ===
+// === 鏁版嵁鍔犺浇 ===
 async function loadAll() {
   try {
     const [dRes, oRes, wRes] = await Promise.all([
@@ -238,11 +239,11 @@ async function loadAll() {
     renderAll()
     startPolling()
   } catch(e) {
-    console.error('加载失败:', e)
+    console.error('鍔犺浇澶辫触:', e)
   }
 }
 
-// === 轮询同步（代替 WebSocket Realtime） ===
+// === 杞鍚屾锛堜唬鏇?WebSocket Realtime锛?===
 function startPolling() {
   if (pollTimer) clearInterval(pollTimer)
   pollTimer = setInterval(async function() {
@@ -262,7 +263,7 @@ function startPolling() {
   }, 3000)
 }
 
-// === 渲染 ===
+// === 娓叉煋 ===
 function renderAll() {
   renderOrderTab()
   renderWishTab()
@@ -270,28 +271,28 @@ function renderAll() {
 }
 
 function renderCategories() {
-  var cats = ['全部']
+  var cats = ['鍏ㄩ儴']
   var seen = {}
   dishes.forEach(function(d) { if (!seen[d.category]) { seen[d.category] = true; cats.push(d.category) } })
   document.getElementById('catScroll').innerHTML = cats.map(function(c) {
-    return '<div class=cat-tag' + (c === activeCat ? ' active' : '') + ' onclick=selectCat(\'' + c + '\')>' + c + '</div>'
+    return '<div class="cat-tag' + (c === activeCat ? ' active' : '') + '" onclick="selectCat(\'' + c + '\')">' + c + '</div>'
   }).join('')
 }
 
 function renderOrderTab() {
   renderCategories()
-  var filtered = activeCat === '全部' ? dishes : dishes.filter(function(d) { return d.category === activeCat })
+  var filtered = activeCat === '鍏ㄩ儴' ? dishes : dishes.filter(function(d) { return d.category === activeCat })
   var html = filtered.map(function(d) {
     var qty = orders[d.id] || 0
-    return '<div class=dish-card>'
-      + '<div class=dish-info><div class=dish-name>' + d.name + '</div><div class=dish-price>' + d.price + '</div></div>'
-      + '<div class=qty-ctrl>'
-      + '<button class=qty-btn' + (qty === 0 ? ' zero' : '') + ' onclick=changeQty(' + d.id + ',-1)>−</button>'
-      + '<span class=qty-num>' + qty + '</span>'
-      + '<button class=qty-btn onclick=changeQty(' + d.id + ',1)>+</button>'
+    return '<div class="dish-card">'
+      + '<div class="dish-info"><div class="dish-name">' + d.name + '</div><div class="dish-price">' + d.price + '</div></div>'
+      + '<div class="qty-ctrl">'
+      + '<button class="qty-btn' + (qty === 0 ? ' zero' : '') + '" onclick="changeQty(' + d.id + ',-1)">鈭?/button>'
+      + '<span class="qty-num">' + qty + '</span>'
+      + '<button class="qty-btn" onclick="changeQty(' + d.id + ',1)">+</button>'
       + '</div></div>'
   }).join('')
-  document.getElementById('dishList').innerHTML = html || '<div class=empty-state><div class=big-emoji>🍽️</div>该分类暂无菜品</div>'
+  document.getElementById('dishList').innerHTML = html || '<div class="empty-state"><div class="big-emoji">馃嵔锔?/div>璇ュ垎绫绘殏鏃犺彍鍝?/div>'
 }
 
 function renderBottomBar() {
@@ -300,35 +301,35 @@ function renderBottomBar() {
     if (!orders.hasOwnProperty(did) || orders[did] <= 0) continue
     var d = dishes.find(function(dd) { return dd.id == did })
     if (!d) continue
-    items.push(d.name + ' ×' + orders[did])
+    items.push(d.name + ' 脳' + orders[did])
     total += d.price * orders[did]
     count += orders[did]
   }
-  document.getElementById('orderSummary').innerHTML = items.length ? items.join('、') : '暂无已选菜品'
-  document.getElementById('orderCount').textContent = count + ' 道菜'
-  document.getElementById('orderTotal').textContent = '¥' + total.toFixed(2)
+  document.getElementById('orderSummary').innerHTML = items.length ? items.join('銆?) : '鏆傛棤宸查€夎彍鍝?
+  document.getElementById('orderCount').textContent = count + ' 閬撹彍'
+  document.getElementById('orderTotal').textContent = '楼' + total.toFixed(2)
 }
 
 function renderWishTab() {
   if (wishes.length === 0) {
-    document.getElementById('wishList').innerHTML = '<div class=empty-state><div class=big-emoji>💌</div>还没有心愿，快发一个吧</div>'
+    document.getElementById('wishList').innerHTML = '<div class="empty-state"><div class="big-emoji">馃拰</div>杩樻病鏈夊績鎰匡紝蹇彂涓€涓惂</div>'
   } else {
     document.getElementById('wishList').innerHTML = wishes.map(function(w) {
       var isMine = w.from_user === myNick
       var isPending = w.status === 'pending'
-      var statusLabel = w.status === 'pending' ? '等待中' : (w.status === 'accepted' ? '✅ 想吃' : '❌ 不想吃')
+      var statusLabel = w.status === 'pending' ? '绛夊緟涓? : (w.status === 'accepted' ? '鉁?鎯冲悆' : '鉂?涓嶆兂鍚?)
       var actions = ''
       if (isPending && !isMine) {
-        actions = '<div class=wish-actions>'
-          + '<button class=btn-accept onclick=respondWish(' + w.id + ',\'accepted\')>😋 想吃</button>'
-          + '<button class=btn-reject onclick=respondWish(' + w.id + ',\'rejected\')>🙅 不想吃</button>'
+        actions = '<div class="wish-actions">'
+          + '<button class="btn-accept" onclick="respondWish(' + w.id + ',\'accepted\')">馃構 鎯冲悆</button>'
+          + '<button class="btn-reject" onclick="respondWish(' + w.id + ',\'rejected\')">馃檯 涓嶆兂鍚?/button>'
           + '</div>'
       } else if (isPending && isMine) {
-        actions = '<div style=font-size:12px;color:#999;text-align:right>等待对方回应...</div>'
+        actions = '<div style="font-size:12px;color:#999;text-align:right">绛夊緟瀵规柟鍥炲簲...</div>'
       }
-      return '<div class=wish-card>'
-        + '<div class=wish-top><span class=wish-text>' + w.wish_text + '</span><span class=wish-status ' + w.status + '>' + statusLabel + '</span></div>'
-        + '<div class=wish-from>来自：' + w.from_user + '</div>'
+      return '<div class="wish-card">'
+        + '<div class="wish-top"><span class="wish-text">' + w.wish_text + '</span><span class="wish-status ' + w.status + '">' + statusLabel + '</span></div>'
+        + '<div class="wish-from">鏉ヨ嚜锛? + w.from_user + '</div>'
         + actions + '</div>'
     }).join('')
   }
@@ -339,21 +340,21 @@ function renderWishTab() {
   if (accepted.length > 0 || rejected.length > 0) {
     var verdictHTML = ''
     if (accepted.length > 0) {
-      verdictHTML += '<div class=verdict>😋</div><div class=verdict-sub>' + accepted.map(function(w) { return w.wish_text }).join('、') + ' — 达成共识！</div>'
+      verdictHTML += '<div class="verdict">馃構</div><div class="verdict-sub">' + accepted.map(function(w) { return w.wish_text }).join('銆?) + ' 鈥?杈炬垚鍏辫瘑锛?/div>'
     }
     if (rejected.length > 0) {
-      verdictHTML += '<div style=margin-top:8px;font-size:14px;color:#999>❌ ' + rejected.map(function(w) { return w.wish_text }).join('、') + ' 被拒绝了</div>'
+      verdictHTML += '<div style="margin-top:8px;font-size:14px;color:#999">鉂?' + rejected.map(function(w) { return w.wish_text }).join('銆?) + ' 琚嫆缁濅簡</div>'
     }
     if (pending.length > 0) {
-      verdictHTML += '<div style=margin-top:8px;font-size:14px;color:#FF9800>⏳ ' + pending.map(function(w) { return w.wish_text }).join('、') + ' 等待回应</div>'
+      verdictHTML += '<div style="margin-top:8px;font-size:14px;color:#FF9800">鈴?' + pending.map(function(w) { return w.wish_text }).join('銆?) + ' 绛夊緟鍥炲簲</div>'
     }
-    document.getElementById('wishResult').innerHTML = '<div class=wish-result><h3>💝 心愿结果</h3>' + verdictHTML + '</div>'
+    document.getElementById('wishResult').innerHTML = '<div class="wish-result"><h3>馃挐 蹇冩効缁撴灉</h3>' + verdictHTML + '</div>'
   } else {
     document.getElementById('wishResult').innerHTML = ''
   }
 }
 
-// === 操作 ===
+// === 鎿嶄綔 ===
 function selectCat(cat) { activeCat = cat; renderOrderTab() }
 
 async function changeQty(dishId, delta) {
@@ -365,10 +366,8 @@ async function changeQty(dishId, delta) {
     } else {
       await sbApi('POST', '/orders', { dish_id: dishId, quantity: nxt, updated_by: myNick, updated_at: new Date().toISOString() })
     }
-    loadAll()
-  } catch(e) {
-    toast('操作失败，请重试')
-  }
+  } catch(e) { return toast('鎿嶄綔澶辫触锛岃閲嶈瘯') }
+  loadAll()
 }
 
 function switchTab(tab) {
@@ -381,23 +380,19 @@ function switchTab(tab) {
 
 async function sendWish() {
   var text = document.getElementById('wishInput').value.trim()
-  if (!text) return toast('请输入想吃的东西')
+  if (!text) return toast('璇疯緭鍏ユ兂鍚冪殑涓滆タ')
   try {
     await sbApi('POST', '/wishes', { wish_text: text, from_user: myNick, status: 'pending' })
-    document.getElementById('wishInput').value = ''
-    loadAll()
-  } catch(e) {
-    toast('发送失败，请重试')
-  }
+  } catch(e) { return toast('鍙戦€佸け璐ワ紝璇烽噸璇?) }
+  document.getElementById('wishInput').value = ''
+  loadAll()
 }
 
 async function respondWish(id, status) {
   try {
     await sbApi('PATCH', '/wishes?id=eq.' + id, { status: status, responded_by: myNick })
-    loadAll()
-  } catch(e) {
-    toast('操作失败，请重试')
-  }
+  } catch(e) { return toast('鎿嶄綔澶辫触锛岃閲嶈瘯') }
+  loadAll()
 }
 
 function showAddDish() { document.getElementById('dishModal').classList.remove('hidden') }
@@ -407,16 +402,14 @@ async function addCustomDish() {
   var name = document.getElementById('newDishName').value.trim()
   var price = parseFloat(document.getElementById('newDishPrice').value)
   var cat = document.getElementById('newDishCat').value
-  if (!name || isNaN(price) || price < 0) return toast('请填写完整的菜品信息')
+  if (!name || isNaN(price) || price < 0) return toast('璇峰～鍐欏畬鏁寸殑鑿滃搧淇℃伅')
   try {
     await sbApi('POST', '/dishes', { name: name, price: price, category: cat, created_by: myNick })
-    document.getElementById('newDishName').value = ''
-    document.getElementById('newDishPrice').value = ''
-    hideAddDish()
-    loadAll()
-  } catch(e) {
-    toast('添加失败，请重试')
-  }
+  } catch(e) { return toast('娣诲姞澶辫触锛岃閲嶈瘯') }
+  document.getElementById('newDishName').value = ''
+  document.getElementById('newDishPrice').value = ''
+  hideAddDish()
+  loadAll()
 }
 
 function toast(msg) {
