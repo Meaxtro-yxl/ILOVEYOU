@@ -1,1253 +1,803 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-
-<title>甜蜜点菜</title>
-
+<title>çèç¹è</title>
 <style>
-
 :root{--pink:#E91E63;--pink-light:#FCE4EC;--warm:#FFF3E0;--green:#4CAF50;--orange:#FF9800;--gray:#9E9E9E;--card-shadow:0 2px 8px rgba(0,0,0,.08);--radius:16px;}
-
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#FCE4EC,#FFF3E0,#FCE4EC);min-height:100vh;display:flex;justify-content:center}
-
 .app{width:100%;max-width:480px;min-height:100vh;display:flex;flex-direction:column;position:relative;padding-bottom:80px}
-
-
-
 .header{background:linear-gradient(135deg,#F8BBD0,#E91E63);color:#fff;padding:16px 20px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(233,30,99,.2)}
-
 .header h1{font-size:22px;font-weight:700;letter-spacing:2px}
-
 .header .sub{font-size:12px;opacity:.85;margin-top:2px}
-
 .nickname-bar{display:flex;justify-content:space-between;align-items:center;padding:8px 20px;background:rgba(255,255,255,.6);font-size:13px;color:#666}
-
 .nickname-bar button{background:none;border:1px solid #E91E63;color:#E91E63;padding:4px 12px;border-radius:12px;font-size:12px;cursor:pointer}
-
-
-
 .tabs{display:flex;background:#fff;border-bottom:1px solid #f0f0f0;position:sticky;top:76px;z-index:99}
-
-.tab{flex:1;text-align:center;padding:14px 0;font-size:14px;font-weight:600;color:#999;cursor:pointer;transition:all .2s;border-bottom:3px solid transparent}
-
+.tab{flex:1;text-align:center;padding:14px 0;font-size:13px;font-weight:600;color:#999;cursor:pointer;transition:all .2s;border-bottom:3px solid transparent}
 .tab.active{color:#E91E63;border-bottom-color:#E91E63}
-
-.tab .emoji{font-size:18px;margin-right:4px}
-
-
-
+.tab .emoji{font-size:18px;margin-right:2px}
 .content{flex:1;padding:16px;overflow-y:auto}
-
-
-
 .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 0 12px;-webkit-overflow-scrolling:touch}
-
 .cat-scroll::-webkit-scrollbar{display:none}
-
 .cat-tag{padding:8px 16px;border-radius:20px;font-size:13px;white-space:nowrap;cursor:pointer;border:1px solid #e0e0e0;background:#fff;color:#666;transition:all .2s;flex-shrink:0}
-
 .cat-tag.active{background:#E91E63;color:#fff;border-color:#E91E63}
 
-
-
-.dish-card{background:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--card-shadow);transition:transform .15s;position:relative}
-
+/* èå */
+.dish-card{background:#fff;border-radius:var(--radius);padding:14px 36px 14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--card-shadow);transition:transform .15s;position:relative}
 .dish-card:active{transform:scale(.98)}
-
-.dish-info{flex:1;min-width:0;padding-right:8px}
-
+.dish-info{flex:1;min-width:0}
 .dish-name{font-size:15px;font-weight:600;color:#333}
-
-.dish-price{font-size:13px;color:#E91E63;margin-top:2px}
-
-.dish-price::before{content:'¥'}
-
+.dish-cute{font-size:12px;color:#E91E63;margin-top:2px;display:flex;align-items:center;gap:4px}
+.dish-del{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;border:none;background:transparent;color:#ccc;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;padding:0;line-height:1}
+.dish-del:hover{color:#E91E63;background:rgba(233,30,99,.08)}
 .qty-ctrl{display:flex;align-items:center;gap:8px;flex-shrink:0}
-
 .qty-btn{width:30px;height:30px;border-radius:50%;border:2px solid #E91E63;background:#fff;color:#E91E63;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;line-height:1;padding:0}
-
 .qty-btn:active{background:#E91E63;color:#fff}
-
 .qty-btn.zero{border-color:#ddd;color:#ddd}
-
 .qty-num{font-size:16px;font-weight:700;color:#333;min-width:20px;text-align:center}
-
-
-
-.delete-btn{position:absolute;top:10px;right:12px;font-size:16px;cursor:pointer;opacity:.4;transition:all .2s;z-index:1;padding:4px}
-
-.delete-btn:hover{opacity:1;color:#E91E63}
-
-
-
 .add-custom{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;margin-top:8px;border:2px dashed #E91E63;border-radius:var(--radius);color:#E91E63;font-size:14px;cursor:pointer;background:rgba(233,30,99,.04);transition:all .2s}
-
 .add-custom:active{background:rgba(233,30,99,.1)}
 
-
-
+/* åºé¨æ  */
 .bottom-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;box-shadow:0 -2px 12px rgba(0,0,0,.1);border-radius:var(--radius) var(--radius) 0 0;padding:12px 16px;z-index:100}
-
 .bottom-bar .summary{font-size:13px;color:#666;max-height:60px;overflow-y:auto}
-
 .bottom-bar .summary span{color:#E91E63;font-weight:600}
-
 .bottom-bar .total{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid #f0f0f0}
-
-.bottom-bar .total .price{font-size:22px;font-weight:800;color:#E91E63}
-
+.bottom-bar .total .cute-total{font-size:18px;font-weight:800;color:#E91E63}
 .bottom-bar .total .count{font-size:13px;color:#999}
 
+/* éæ¹æç´¢ */
+.recipe-search{width:100%;padding:12px 16px;border:2px solid #F8BBD0;border-radius:24px;font-size:15px;outline:none;margin-bottom:12px;transition:border .2s}
+.recipe-search:focus{border-color:#E91E63}
 
+/* é£æåç»æå  */
+.ingredient-group{background:#fff;border-radius:12px;margin-bottom:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);transition:all .2s}
+.ingredient-group.open{border-left:3px solid #E91E63}
+.ingredient-header{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;cursor:pointer;user-select:none;transition:background .15s}
+.ingredient-header:active{background:#fafafa}
+.ingredient-group.open .ingredient-header{background:#FCE4EC}
+.ingredient-name-row{display:flex;align-items:center;gap:8px}
+.ingredient-emoji{font-size:20px}
+.ingredient-label{font-weight:600;font-size:15px;color:#333}
+.ingredient-count{background:#FCE4EC;color:#E91E63;padding:1px 8px;border-radius:10px;font-size:11px}
+.ingredient-group.open .ingredient-count{background:#E91E63;color:#fff}
+.ingredient-arrow{font-size:11px;color:#999;transition:transform .25s}
+.ingredient-group.open .ingredient-arrow{color:#E91E63;transform:rotate(180deg)}
+.ingredient-recipes{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.ingredient-group.open .ingredient-recipes{max-height:800px}
+.ingredient-recipe-item{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 10px 20px;border-top:1px solid #f8f8f8;font-size:14px}
+.ingredient-recipe-item:active{background:#fafafa}
+.ingredient-recipe-name{font-weight:500;color:#333;flex:1}
+.ingredient-recipe-ingredients{font-size:11px;color:#999;margin-left:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.ingredient-recipe-actions{display:flex;gap:4px;flex-shrink:0;margin-left:8px}
+.ir-btn{width:24px;height:24px;border-radius:50%;border:1px solid #e0e0e0;background:#fff;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;padding:0;line-height:1;color:#999}
+.ir-btn:hover{border-color:#E91E63;color:#E91E63}
+.ir-btn.del:hover{border-color:#F44336;color:#F44336;background:rgba(244,67,54,.06)}
 
-.wish-input-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.search-empty{text-align:center;padding:30px 20px;color:#999;font-size:14px}
 
-.wish-input-row{display:flex;gap:10px}
-
+/* å¿æ¿è¾å¥åº */
+.wish-input-row{display:flex;gap:10px;margin-bottom:8px;position:relative}
 .wish-input-row input{flex:1;padding:12px 16px;border:2px solid #F8BBD0;border-radius:24px;font-size:15px;outline:none;transition:border .2s}
-
 .wish-input-row input:focus{border-color:#E91E63}
-
 .wish-input-row button{padding:12px 24px;background:linear-gradient(135deg,#F8BBD0,#E91E63);color:#fff;border:none;border-radius:24px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s;white-space:nowrap}
-
 .wish-input-row button:active{opacity:.8}
+.auto-suggest{position:absolute;top:100%;left:0;right:56px;background:#fff;border:2px solid #F8BBD0;border-top:none;border-radius:0 0 16px 16px;max-height:180px;overflow-y:auto;z-index:50;display:none;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.auto-suggest.show{display:block}
+.auto-suggest-item{padding:10px 16px;font-size:14px;color:#333;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f8f8f8}
+.auto-suggest-item:last-child{border-bottom:none}
+.auto-suggest-item:hover{background:#FCE4EC}
+.auto-suggest-item .as-ingredients{font-size:11px;color:#999;margin-left:8px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wish-recipe-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.wish-recipe-bar .recipe-pick-btn{font-size:12px;padding:6px 14px;border:1px dashed #E91E63;border-radius:16px;color:#E91E63;background:transparent;cursor:pointer}
+.wish-recipe-bar .selected-recipe{font-size:12px;color:#666;background:#FCE4EC;padding:4px 12px;border-radius:12px;display:flex;align-items:center;gap:6px}
+.wish-recipe-bar .selected-recipe .clear-recipe{cursor:pointer;color:#E91E63;font-weight:700;font-size:14px}
 
-.wish-recipe-select{display:flex;align-items:center;gap:6px;font-size:13px;color:#999;cursor:pointer}
-
-.wish-recipe-select span{text-decoration:underline;text-underline-offset:3px}
-
-
-
-.wish-card{background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--card-shadow)}
-
-.wish-card .wish-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-
-.wish-card .wish-text{font-size:16px;font-weight:600;color:#333}
-
+/* å¿æ¿å¡ç */
+.wish-card{background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--card-shadow);position:relative}
+.wish-card .wish-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.wish-card .wish-text{font-size:16px;font-weight:600;color:#333;padding-right:24px}
 .wish-card .wish-from{font-size:12px;color:#999}
-
-.wish-card .wish-status{padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600}
-
+.wish-card .wish-status{padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;flex-shrink:0}
 .wish-card .wish-status.pending{background:#FFF3E0;color:#FF9800}
-
 .wish-card .wish-status.accepted{background:#E8F5E9;color:#4CAF50}
-
 .wish-card .wish-status.rejected{background:#f5f5f5;color:#9E9E9E}
-
 .wish-card .wish-actions{display:flex;gap:10px}
-
 .wish-card .wish-actions button{flex:1;padding:10px;border:none;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
-
 .wish-card .wish-actions .btn-accept{background:#E8F5E9;color:#4CAF50}
-
 .wish-card .wish-actions .btn-accept:active{background:#4CAF50;color:#fff}
-
 .wish-card .wish-actions .btn-reject{background:#f5f5f5;color:#9E9E9E}
-
 .wish-card .wish-actions .btn-reject:active{background:#9E9E9E;color:#fff}
-
-.wish-card .wish-recipe-tag{display:inline-block;margin-top:8px;padding:4px 10px;background:#FFF3E0;color:#FF9800;border-radius:8px;font-size:12px;cursor:pointer}
-
-
-
+.wish-card .wish-del{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;border:none;background:transparent;color:#ccc;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;padding:0;line-height:1}
+.wish-card .wish-del:hover{color:#E91E63;background:rgba(233,30,99,.08)}
+.wish-card .wish-recipe-info{margin-top:8px;padding-top:8px;border-top:1px dashed #f0f0f0;font-size:12px;color:#E91E63;cursor:pointer;display:inline-block}
+.wish-card .wish-recipe-detail{display:none;margin-top:6px;padding:8px 12px;background:#FCE4EC;border-radius:10px;font-size:12px;color:#666;line-height:1.6}
+.wish-card .wish-recipe-detail.show{display:block}
 .wish-result{background:linear-gradient(135deg,#FCE4EC,#FFF3E0);border-radius:var(--radius);padding:20px;text-align:center;margin-top:16px}
-
 .wish-result h3{font-size:18px;margin-bottom:8px;color:#E91E63}
-
 .wish-result .verdict{font-size:40px;margin:8px 0}
-
 .wish-result .verdict-sub{font-size:14px;color:#666}
 
-
-
-.recipe-card{background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--card-shadow);position:relative}
-
-.recipe-card .recipe-top{display:flex;justify-content:space-between;align-items:flex-start}
-
-.recipe-name{font-size:16px;font-weight:600;color:#333;margin-bottom:6px}
-
-.recipe-ingredients{font-size:13px;color:#666;line-height:1.5;margin-bottom:8px}
-
-.recipe-ingredients .ing-tag{display:inline-block;padding:2px 8px;background:#FCE4EC;color:#E91E63;border-radius:10px;margin:2px 4px 2px 0;font-size:12px}
-
-.recipe-meta{font-size:11px;color:#999;display:flex;justify-content:space-between}
-
-.recipe-card .recipe-actions{position:absolute;top:12px;right:12px;display:flex;gap:6px}
-
-.recipe-card .recipe-action-btn{width:28px;height:28px;border-radius:50%;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:#999}
-
-.recipe-card .recipe-action-btn:hover{border-color:#E91E63;color:#E91E63}
-
-.recipe-card .recipe-action-btn.danger:hover{border-color:#f44336;color:#f44336}
-
-
-
-.recipe-selector{max-height:300px;overflow-y:auto;margin-bottom:12px}
-
-.recipe-selector .recipe-option{padding:12px 16px;border:2px solid #e0e0e0;border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:center}
-
-.recipe-selector .recipe-option:hover{border-color:#E91E63}
-
-.recipe-selector .recipe-option.selected{border-color:#E91E63;background:#FCE4EC}
-
-.recipe-selector .recipe-option .opt-name{font-size:14px;font-weight:600;color:#333}
-
-.recipe-selector .recipe-option .opt-ing{font-size:12px;color:#999}
-
-.recipe-selector .no-recipe{padding:12px;text-align:center;color:#999;font-size:13px;border:2px dashed #e0e0e0;border-radius:12px;cursor:pointer}
-
-.recipe-selector .no-recipe:hover{border-color:#E91E63;color:#E91E63}
-
-
-
+/* å¼¹çª */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center}
-
 .modal-overlay.hidden{display:none}
-
-.modal{background:#fff;width:100%;max-width:480px;border-radius:var(--radius) var(--radius) 0 0;padding:20px;animation:slideUp .25s}
-
+.modal{background:#fff;width:100%;max-width:480px;border-radius:var(--radius) var(--radius) 0 0;padding:20px;animation:slideUp .25s;max-height:85vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-
 .modal h3{font-size:18px;margin-bottom:16px;color:#333}
-
-.modal input,.modal select{width:100%;padding:12px;margin-bottom:12px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px;outline:none}
-
-.modal input:focus,.modal select:focus{border-color:#E91E63}
-
-.modal textarea{width:100%;padding:12px;margin-bottom:12px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px;outline:none;resize:vertical;min-height:80px;font-family:inherit}
-
-.modal textarea:focus{border-color:#E91E63}
-
+.modal input,.modal select,.modal textarea{width:100%;padding:12px;margin-bottom:12px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px;outline:none;font-family:inherit}
+.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:#E91E63}
+.modal textarea{resize:vertical;min-height:80px}
 .modal .modal-btns{display:flex;gap:10px}
-
 .modal .modal-btns button{flex:1;padding:12px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer}
-
 .modal .btn-cancel{background:#f5f5f5;color:#666}
-
 .modal .btn-confirm{background:linear-gradient(135deg,#F8BBD0,#E91E63);color:#fff}
-
-
-
+.recipe-select-list{max-height:50vh;overflow-y:auto}
+.recipe-select-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #f5f5f5;cursor:pointer;transition:background .15s}
+.recipe-select-item:hover{background:#FCE4EC}
+.recipe-select-item .rsi-name{font-size:15px;font-weight:600;color:#333}
+.recipe-select-item .rsi-ingredients{font-size:12px;color:#999;margin-top:2px}
+.recipe-select-item .rsi-check{width:22px;height:22px;border-radius:50%;border:2px solid #e0e0e0;flex-shrink:0;margin-left:12px}
+.recipe-select-item.selected .rsi-check{background:#E91E63;border-color:#E91E63}
+.recipe-select-none{padding:14px 16px;text-align:center;color:#999;font-size:14px;cursor:pointer;border-bottom:1px solid #f5f5f5}
+.recipe-select-none:hover{background:#fafafa}
 .nick-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:flex;align-items:center;justify-content:center}
-
 .nick-modal.hidden{display:none}
-
 .nick-box{background:#fff;border-radius:var(--radius);padding:24px;width:85%;max-width:340px;text-align:center}
-
 .nick-box h2{font-size:20px;margin-bottom:4px;color:#E91E63}
-
 .nick-box p{font-size:13px;color:#999;margin-bottom:16px}
-
 .nick-box input{width:100%;padding:12px;border:2px solid #F8BBD0;border-radius:12px;font-size:16px;text-align:center;outline:none;margin-bottom:12px}
-
 .nick-box input:focus{border-color:#E91E63}
-
 .nick-box button{width:100%;padding:12px;background:linear-gradient(135deg,#F8BBD0,#E91E63);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer}
-
-
-
 .empty-state{text-align:center;padding:40px 20px;color:#999}
-
 .empty-state .big-emoji{font-size:48px;margin-bottom:12px}
-
-
-
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:400;background:#333;color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .3s}
-
 .toast.show{opacity:1}
-
 </style>
-
 </head>
-
 <body>
 
-
-
 <div class="app">
-
   <div class="toast" id="toast"></div>
-
-
-
   <div class="nick-modal" id="nickModal">
-
     <div class="nick-box">
-
-      <h2>🍽️ 甜蜜点菜</h2>
-
-      <p>输入你的昵称开始点菜吧</p>
-
-      <input id="nickInput" placeholder="比如：宝宝" maxlength="8">
-
-      <button onclick="saveNick()">确认</button>
-
+      <h2>çèç¹è</h2>
+      <p>è¾å¥ä½ çæµç§°å¼å§ç¹èå§</p>
+      <input id="nickInput" placeholder="æ¯å¦ï¼å®å®" maxlength="8">
+      <button onclick="saveNick()">ç¡®è®¤</button>
     </div>
-
   </div>
-
-
-
   <div class="header">
-
-    <h1>💕 甜蜜点菜</h1>
-
-    <div class="sub">— 两个人的小厨房 —</div>
-
+    <h1>çèç¹è</h1>
+    <div class="sub">â ä¸¤ä¸ªäººçå°å¨æ¿ â</div>
   </div>
-
   <div class="nickname-bar">
-
-    <span>👤 <span id="myNick">—</span></span>
-
-    <button onclick="changeNick()">换昵称</button>
-
+    <span>ð¤ <span id="myNick">â</span></span>
+    <button onclick="changeNick()">æ¢æµç§°</button>
   </div>
-
-
-
   <div class="tabs">
-
-    <div class="tab active" onclick="switchTab('order')"><span class="emoji">🍳</span>点菜</div>
-
-    <div class="tab" onclick="switchTab('recipe')"><span class="emoji">📝</span>配方库</div>
-
-    <div class="tab" onclick="switchTab('wish')"><span class="emoji">💝</span>心愿菜单</div>
-
+    <div class="tab active" onclick="switchTab('order')"><span class="emoji">ð³</span>ç¹è</div>
+    <div class="tab" onclick="switchTab('recipe')"><span class="emoji">ð</span>éæ¹åº</div>
+    <div class="tab" onclick="switchTab('wish')"><span class="emoji">ð</span>å¿æ¿èå</div>
   </div>
-
-
-
   <div class="content" id="content">
-
     <div id="orderTab">
-
       <div class="cat-scroll" id="catScroll"></div>
-
       <div id="dishList"></div>
-
-      <div class="add-custom" onclick="showAddDish()">+ 自定义菜品</div>
-
+      <div class="add-custom" onclick="showAddDish()">+ èªå®ä¹èå</div>
     </div>
-
     <div id="recipeTab" style="display:none">
-
+      <input class="recipe-search" id="recipeSearch" placeholder="ð æç´¢é£ææéæ¹..." oninput="renderRecipeTab()">
       <div id="recipeList"></div>
-
-      <div class="add-custom" onclick="showAddRecipe()">+ 创建配方</div>
-
+      <div class="add-custom" onclick="showRecipeModal()">+ æ°å»ºéæ¹</div>
     </div>
-
     <div id="wishTab" style="display:none">
-
-      <div class="wish-input-wrap">
-
-        <div class="wish-input-row">
-
-          <input id="wishInput" placeholder="今天想吃...？" maxlength="30">
-
-          <button onclick="sendWish()">发送</button>
-
-        </div>
-
-        <div class="wish-recipe-select" onclick="showRecipeSelector()">
-
-          📋 <span id="selectedRecipeLabel">不绑定配方</span>
-
-        </div>
-
+      <div class="wish-input-row" id="wishInputRow">
+        <input id="wishInput" placeholder="ä»å¤©æ³å...ï¼" maxlength="30" oninput="onWishInput()" onfocus="onWishInput()">
+        <button onclick="sendWish()">åé</button>
+        <div class="auto-suggest" id="autoSuggest"></div>
       </div>
-
+      <div class="wish-recipe-bar" id="wishRecipeBar">
+        <button class="recipe-pick-btn" onclick="showRecipeSelector()">ð éæ©éæ¹</button>
+        <span id="selectedRecipeLabel" style="display:none"></span>
+      </div>
       <div id="wishList"></div>
-
       <div id="wishResult"></div>
-
     </div>
-
   </div>
-
 </div>
-
-
 
 <div class="bottom-bar" id="bottomBar">
-
-  <div class="summary" id="orderSummary">暂无已选菜品</div>
-
+  <div class="summary" id="orderSummary">ææ å·²éèå</div>
   <div class="total">
-
-    <span class="count" id="orderCount">0 道菜</span>
-
-    <span class="price" id="orderTotal">¥0</span>
-
+    <span class="count" id="orderCount">0 éè</span>
+    <span class="cute-total" id="orderCute"></span>
   </div>
-
 </div>
-
-
 
 <div class="modal-overlay hidden" id="dishModal">
-
   <div class="modal">
-
-    <h3>添加自定义菜品</h3>
-
-    <input id="newDishName" placeholder="菜名">
-
-    <input id="newDishPrice" type="number" placeholder="价格（元）" step="0.01" min="0">
-
+    <h3>æ·»å èªå®ä¹èå</h3>
+    <input id="newDishName" placeholder="èå">
     <select id="newDishCat">
-
-      <option value="荤菜">荤菜</option><option value="素菜">素菜</option>
-
-      <option value="汤品">汤品</option><option value="主食">主食</option><option value="饮品">饮品</option>
-
+      <option value="è¤è">è¤è</option><option value="ç´ è">ç´ è</option>
+      <option value="æ±¤å">æ±¤å</option><option value="ä¸»é£">ä¸»é£</option><option value="é¥®å">é¥®å</option>
     </select>
-
     <div class="modal-btns">
-
-      <button class="btn-cancel" onclick="hideAddDish()">取消</button>
-
-      <button class="btn-confirm" onclick="addCustomDish()">确认添加</button>
-
+      <button class="btn-cancel" onclick="hideAddDish()">åæ¶</button>
+      <button class="btn-confirm" onclick="addCustomDish()">ç¡®è®¤æ·»å </button>
     </div>
-
   </div>
-
 </div>
-
-
 
 <div class="modal-overlay hidden" id="recipeModal">
-
   <div class="modal">
-
-    <h3 id="recipeModalTitle">创建配方</h3>
-
-    <input id="recipeName" placeholder="配方名（如：芒果奶昔）" maxlength="50">
-
-    <textarea id="recipeIngredients" placeholder="食材列表，用逗号分隔（如：芒果,牛奶,糯米）"></textarea>
-
+    <h3 id="recipeModalTitle">æ°å»ºéæ¹</h3>
+    <input id="recipeName" placeholder="éæ¹åï¼å¦ï¼èæå¥¶æï¼" maxlength="50">
+    <textarea id="recipeIngredients" placeholder="é£æåè¡¨ï¼ç¨éå·åéï¼å¦ï¼èæ,çå¥¶,ç³¯ç±³ï¼"></textarea>
     <div class="modal-btns">
-
-      <button class="btn-cancel" onclick="hideRecipeModal()">取消</button>
-
-      <button class="btn-confirm" onclick="saveRecipe()">保存</button>
-
+      <button class="btn-cancel" onclick="hideRecipeModal()">åæ¶</button>
+      <button class="btn-confirm" onclick="saveRecipe()">ä¿å­</button>
     </div>
-
   </div>
-
 </div>
 
-
-
-<div class="modal-overlay hidden" id="recipeSelectorModal">
-
+<div class="modal-overlay hidden" id="recipeSelector">
   <div class="modal">
-
-    <h3>选择配方</h3>
-
-    <div class="recipe-selector" id="recipeSelectorList"></div>
-
-    <div class="modal-btns">
-
-      <button class="btn-cancel" onclick="hideRecipeSelector()">取消</button>
-
+    <h3>éæ©éæ¹</h3>
+    <input style="margin-bottom:12px" id="recipeSelectSearch" placeholder="æç´¢éæ¹..." oninput="renderRecipeSelectItems()">
+    <div class="recipe-select-list">
+      <div class="recipe-select-none" onclick="clearRecipeSelection()">ä¸ç»å®éæ¹</div>
+      <div id="recipeSelectItems"></div>
     </div>
-
+    <div style="margin-top:12px">
+      <button class="btn-cancel" style="width:100%;padding:12px;border:none;border-radius:12px;font-size:15px;background:#f5f5f5;color:#666;cursor:pointer" onclick="hideRecipeSelector()">å³é­</button>
+    </div>
   </div>
-
 </div>
-
-
 
 <script>
-
-// === Supabase REST API ===
-
 const SB_URL = 'https://xzoctfkbuxumntlvfjgo.supabase.co/rest/v1'
-
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6b2N0ZmtidXh1bW50bHZmamdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODcxMDAsImV4cCI6MjA5NjE2MzEwMH0.vDNGNRpnWlAvaY_FDL244Ujw0jYQL7nT-i3fg8S1KTY'
 
-
+const CUTE_ACTIONS = ['äº²äº²', 'æ±æ±', 'ä¸¾é«é«']
+const INGREDIENT_EMOJIS = {
+  'èæ':'ð¥­','èè':'ð','é¦è':'ð','çæ²¹æ':'ð¥','èè':'ð«','å·§åå':'ð«','æ¹è¶':'ðµ','çº¢è±':'ð«',
+  'çç ':'ð§','èå¤´':'ð£','è¥¿æ':'ð','æ¤°å¥¶':'ð¥¥','è¥¿ç±³':'âª','ç¾é¦æ':'ð¡','æ æª¬':'ð','æ©å­':'ð',
+  'åå¡':'â','çå¥¶':'ð¥','é¸å¥¶':'ð¥','æ·¡å¥¶æ²¹':'ð§','èè':'ð¯','å°ç³':'ð¬','ç³':'ð¬','é¸¡è':'ð¥',
+  'ç³¯ç±³':'ð','å¤§ç±³':'ð','é¢ç²':'ð¾','ä½ç­é¢ç²':'ð¾','é»æ²¹':'ð§','èå£«':'ð§','å¥¶éª':'ð§',
+  'é¸¡è':'ð','çªè':'ð·','çè':'ð¥©','é±¼':'ð','è¾':'ð¦','åè±':'ð¥','çªè':'ð',
+  'è¾£æ¤':'ð¶ï¸','è±è':'ð§','é»ç':'ð¥','çè':'ð¥¬','ç±³ç²':'ð','é¢æ¡':'ð',
+  'è±ç':'ð¥','æ ¸æ¡':'ð¤','çº¢è¯':'ð ','ç´«è¯':'ð£','èå':'ð¡','çº¢è±æ²':'ð«',
+  'ç':'ð§','é±æ²¹':'ð«','é':'ð«','è':'ð§','å§':'ð«','è±':'ð§'
+}
 
 async function sbApi(method, path, body) {
-
-  var opts = { method: method, headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' } }
-
+  const opts = { method, headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' } }
   if (body) opts.body = JSON.stringify(body)
-
-  var res = await fetch(SB_URL + path, opts)
-
-  if (!res.ok) { var e = await res.text(); throw new Error('API ' + res.status + ': ' + e) }
-
-  var text = await res.text()
-
+  const res = await fetch(SB_URL + path, opts)
+  if (!res.ok) { const e = await res.text(); throw new Error('API ' + res.status + ': ' + e) }
+  const text = await res.text()
   return text ? JSON.parse(text) : []
-
 }
 
-
-
-// === 全局状态 ===
-
-var myNick = localStorage.getItem('couple_menu_nick') || ''
-
-var deviceId = localStorage.getItem('couple_menu_device_id') || crypto.randomUUID()
-
+// === å¨å±ç¶æ ===
+let myNick = localStorage.getItem('couple_menu_nick') || ''
+let deviceId = localStorage.getItem('couple_menu_device_id') || crypto.randomUUID()
 localStorage.setItem('couple_menu_device_id', deviceId)
+let dishes = []
+let orders = {}
+let wishes = []
+let recipes = []
+let activeCat = 'å¨é¨'
+let selectedRecipeId = null
+let editingRecipeId = null
+let openIngredientGroups = {}
+let pollTimer = null
 
-
-
-var dishes = []
-
-var orders = {}
-
-var wishes = []
-
-var recipes = []
-
-var activeCat = '全部'
-
-var pollTimer = null
-
-var selectedRecipeId = null
-
-var editingRecipeId = null
-
-
-
-// === 初始化 ===
-
+// === åå§å ===
 function init() {
-
   if (!myNick) {
-
     document.getElementById('nickModal').classList.remove('hidden')
-
   } else {
-
     document.getElementById('myNick').textContent = myNick
-
     document.getElementById('nickModal').classList.add('hidden')
-
     loadAll()
-
   }
-
 }
-
-
 
 function saveNick() {
-
-  var v = document.getElementById('nickInput').value.trim()
-
-  if (!v) return toast('请输入昵称')
-
+  const v = document.getElementById('nickInput').value.trim()
+  if (!v) return toast('è¯·è¾å¥æµç§°')
   myNick = v
-
   localStorage.setItem('couple_menu_nick', v)
-
   document.getElementById('myNick').textContent = myNick
-
   document.getElementById('nickModal').classList.add('hidden')
-
   loadAll()
-
 }
-
-
 
 function changeNick() {
-
   document.getElementById('nickInput').value = myNick
-
   document.getElementById('nickModal').classList.remove('hidden')
-
 }
-
-
-
-// === 数据加载 ===
 
 async function loadAll() {
-
   try {
-
-    var results = await Promise.all([
-
+    const [dRes, oRes, wRes, rRes] = await Promise.all([
       sbApi('GET', '/dishes?select=*&order=category.asc,id.asc'),
-
       sbApi('GET', '/orders?select=*'),
-
       sbApi('GET', '/wishes?select=*&order=created_at.desc'),
-
       sbApi('GET', '/recipes?select=*&order=created_at.desc')
-
     ])
-
-    dishes = results[0] || []
-
+    dishes = dRes || []
     orders = {}
-
-    if (results[1]) results[1].forEach(function(o) { orders[o.dish_id] = o.quantity })
-
-    wishes = results[2] || []
-
-    recipes = results[3] || []
-
+    if (oRes) oRes.forEach(function(o) { orders[o.dish_id] = o.quantity })
+    wishes = wRes || []
+    recipes = rRes || []
     renderAll()
-
     startPolling()
-
   } catch(e) {
-
-    console.error('加载失败:', e)
-
+    console.error('å è½½å¤±è´¥:', e)
   }
-
 }
-
-
-
-// === 轮询同步 ===
 
 function startPolling() {
-
   if (pollTimer) clearInterval(pollTimer)
-
   pollTimer = setInterval(async function() {
-
     try {
-
-      var results = await Promise.all([
-
+      const [oRes, wRes, rRes] = await Promise.all([
         sbApi('GET', '/orders?select=*'),
-
         sbApi('GET', '/wishes?select=*&order=created_at.desc'),
-
         sbApi('GET', '/recipes?select=*&order=created_at.desc')
-
       ])
-
       var newOrders = {}
-
-      results[0].forEach(function(o) { newOrders[o.dish_id] = o.quantity })
-
-      if (JSON.stringify(newOrders) !== JSON.stringify(orders) ||
-
-          JSON.stringify(results[1]) !== JSON.stringify(wishes) ||
-
-          JSON.stringify(results[2]) !== JSON.stringify(recipes)) {
-
+      oRes.forEach(function(o) { newOrders[o.dish_id] = o.quantity })
+      if (JSON.stringify(newOrders) !== JSON.stringify(orders) || JSON.stringify(wRes) !== JSON.stringify(wishes) || JSON.stringify(rRes) !== JSON.stringify(recipes)) {
         orders = newOrders
-
-        wishes = results[1]
-
-        recipes = results[2]
-
+        wishes = wRes
+        recipes = rRes
         renderAll()
-
       }
-
     } catch(e) {}
-
   }, 3000)
-
 }
 
-
-
-// === 渲染 ===
-
+// === æ¸²æ ===
 function renderAll() {
-
   renderOrderTab()
-
   renderRecipeTab()
-
   renderWishTab()
-
   renderBottomBar()
-
 }
-
-
 
 function renderCategories() {
-
-  var cats = ['全部']
-
+  var cats = ['å¨é¨']
   var seen = {}
-
   dishes.forEach(function(d) { if (!seen[d.category]) { seen[d.category] = true; cats.push(d.category) } })
-
   document.getElementById('catScroll').innerHTML = cats.map(function(c) {
-
     return '<div class="cat-tag' + (c === activeCat ? ' active' : '') + '" onclick="selectCat(\'' + c + '\')">' + c + '</div>'
-
   }).join('')
-
 }
 
-
+function getCuteAction(dish) {
+  if (dish.cute_action) return dish.cute_action
+  var idx = 0
+  for (var i = 0; i < (dish.name || '').length; i++) idx += dish.name.charCodeAt(i)
+  return CUTE_ACTIONS[idx % 3]
+}
 
 function renderOrderTab() {
-
   renderCategories()
-
-  var filtered = activeCat === '全部' ? dishes : dishes.filter(function(d) { return d.category === activeCat })
-
+  var filtered = activeCat === 'å¨é¨' ? dishes : dishes.filter(function(d) { return d.category === activeCat })
   var html = filtered.map(function(d) {
-
     var qty = orders[d.id] || 0
-
+    var cute = getCuteAction(d)
     return '<div class="dish-card">'
-
-      + '<div class="delete-btn" onclick="event.stopPropagation();deleteDish(' + d.id + ',\'' + d.name + '\')" title="删除菜品">🗑</div>'
-
-      + '<div class="dish-info"><div class="dish-name">' + d.name + '</div><div class="dish-price">' + d.price + '</div></div>'
-
+      + '<div class="dish-info"><div class="dish-name">' + d.name + '</div><div class="dish-cute"><span class="cute-icon">ð</span>' + cute + '</div></div>'
       + '<div class="qty-ctrl">'
-
-      + '<button class="qty-btn' + (qty === 0 ? ' zero' : '') + '" onclick="changeQty(' + d.id + ',-1)">−</button>'
-
+      + '<button class="qty-btn' + (qty === 0 ? ' zero' : '') + '" onclick="changeQty(' + d.id + ',-1)">â</button>'
       + '<span class="qty-num">' + qty + '</span>'
-
       + '<button class="qty-btn" onclick="changeQty(' + d.id + ',1)">+</button>'
-
-      + '</div></div>'
-
+      + '</div>'
+      + '<button class="dish-del" onclick="deleteDish(' + d.id + ')" title="å é¤">â</button>'
+      + '</div>'
   }).join('')
-
-  document.getElementById('dishList').innerHTML = html || '<div class="empty-state"><div class="big-emoji">🍽️</div>该分类暂无菜品</div>'
-
+  document.getElementById('dishList').innerHTML = html || '<div class="empty-state"><div class="big-emoji">ð½ï¸</div>è¯¥åç±»ææ èå</div>'
 }
-
-
-
-function renderRecipeTab() {
-
-  if (recipes.length === 0) {
-
-    document.getElementById('recipeList').innerHTML = '<div class="empty-state"><div class="big-emoji">📝</div>还没有配方，创建一个吧</div>'
-
-  } else {
-
-    document.getElementById('recipeList').innerHTML = recipes.map(function(r) {
-
-      var ings = r.ingredients.split(',').map(function(i) { return '<span class="ing-tag">' + i.trim() + '</span>' }).join('')
-
-      return '<div class="recipe-card">'
-
-        + '<div class="recipe-actions">'
-
-        + '<button class="recipe-action-btn" onclick="editRecipe(' + r.id + ')" title="编辑">✏️</button>'
-
-        + '<button class="recipe-action-btn danger" onclick="deleteRecipe(' + r.id + ')" title="删除">🗑</button>'
-
-        + '</div>'
-
-        + '<div class="recipe-top"><div>'
-
-        + '<div class="recipe-name">' + r.name + '</div>'
-
-        + '<div class="recipe-ingredients">' + ings + '</div>'
-
-        + '</div></div>'
-
-        + '<div class="recipe-meta"><span>创建者：' + r.created_by + '</span><span>' + (r.created_at ? r.created_at.slice(0,10) : '') + '</span></div>'
-
-        + '</div>'
-
-    }).join('')
-
-  }
-
-}
-
-
 
 function renderBottomBar() {
-
-  var items = [], total = 0, count = 0
-
+  var items = [], count = 0
+  var cuteCounts = { 'äº²äº²': 0, 'æ±æ±': 0, 'ä¸¾é«é«': 0 }
   for (var did in orders) {
-
     if (!orders.hasOwnProperty(did) || orders[did] <= 0) continue
-
     var d = dishes.find(function(dd) { return dd.id == did })
-
     if (!d) continue
-
-    items.push(d.name + ' ×' + orders[did])
-
-    total += d.price * orders[did]
-
+    items.push(d.name + ' Ã' + orders[did])
+    var cute = getCuteAction(d)
+    cuteCounts[cute] += orders[did]
     count += orders[did]
-
   }
-
-  document.getElementById('orderSummary').innerHTML = items.length ? items.join('、') : '暂无已选菜品'
-
-  document.getElementById('orderCount').textContent = count + ' 道菜'
-
-  document.getElementById('orderTotal').textContent = '¥' + total.toFixed(2)
-
+  document.getElementById('orderSummary').innerHTML = items.length ? items.join('ã') : 'ææ å·²éèå'
+  document.getElementById('orderCount').textContent = count + ' éè'
+  var cuteParts = []
+  if (cuteCounts['äº²äº²'] > 0) cuteParts.push('ðäº²äº²Ã' + cuteCounts['äº²äº²'])
+  if (cuteCounts['æ±æ±'] > 0) cuteParts.push('ð¤æ±æ±Ã' + cuteCounts['æ±æ±'])
+  if (cuteCounts['ä¸¾é«é«'] > 0) cuteParts.push('ðä¸¾é«é«Ã' + cuteCounts['ä¸¾é«é«'])
+  document.getElementById('orderCute').textContent = cuteParts.length ? cuteParts.join(' ') : ''
 }
 
+// === éæ¹åº - é£æåç»æå  ===
+function getIngredientGroups() {
+  var search = (document.getElementById('recipeSearch').value || '').trim().toLowerCase()
+  var ingredientMap = {}
+  recipes.forEach(function(r) {
+    var ings = (r.ingredients || '').split(/[,ï¼]/).map(function(s) { return s.trim() }).filter(Boolean)
+    ings.forEach(function(ing) {
+      if (!ingredientMap[ing]) ingredientMap[ing] = []
+      ingredientMap[ing].push(r)
+    })
+  })
+  var groups = Object.keys(ingredientMap).map(function(ing) {
+    return { ingredient: ing, recipes: ingredientMap[ing], count: ingredientMap[ing].length }
+  })
+  // ææ°ééåºæå
+  groups.sort(function(a, b) { return b.count - a.count })
 
+  if (search) {
+    // æç´¢æ¶ï¼èªå¨å±å¼å¹éçé£æç»ï¼åªæ¾ç¤ºå¹éçéæ¹
+    var searchGroups = []
+    var autoExpand = {}
+    groups.forEach(function(g) {
+      var matchIngredient = g.ingredient.toLowerCase().indexOf(search) !== -1
+      var matchedRecipes = g.recipes.filter(function(r) {
+        return r.name.toLowerCase().indexOf(search) !== -1 || (r.ingredients || '').toLowerCase().indexOf(search) !== -1
+      })
+      if (matchIngredient || matchedRecipes.length > 0) {
+        searchGroups.push({ ingredient: g.ingredient, recipes: matchedRecipes, count: matchedRecipes.length, _matchIngredient: matchIngredient })
+        autoExpand[g.ingredient] = true
+      }
+    })
+    if (searchGroups.length > 0) {
+      openIngredientGroups = autoExpand
+    }
+    return searchGroups
+  }
+  return groups
+}
 
-function renderWishTab() {
-
-  if (wishes.length === 0) {
-
-    document.getElementById('wishList').innerHTML = '<div class="empty-state"><div class="big-emoji">💌</div>还没有心愿，快发一个吧</div>'
-
-  } else {
-
-    document.getElementById('wishList').innerHTML = wishes.map(function(w) {
-
-      var isMine = w.from_user === myNick
-
-      var isPending = w.status === 'pending'
-
-      var statusLabel = w.status === 'pending' ? '等待中' : (w.status === 'accepted' ? '✅ 想吃' : '❌ 不想吃')
-
-      var actions = ''
-
-      if (isPending && !isMine) {
-
-        actions = '<div class="wish-actions">'
-
-          + '<button class="btn-accept" onclick="respondWish(' + w.id + ',\'accepted\')">😋 想吃</button>'
-
-          + '<button class="btn-reject" onclick="respondWish(' + w.id + ',\'rejected\')">🙅 不想吃</button>'
-
+function renderRecipeTab() {
+  var groups = getIngredientGroups()
+  if (groups.length === 0) {
+    var search = (document.getElementById('recipeSearch').value || '').trim()
+    document.getElementById('recipeList').innerHTML = search
+      ? '<div class="search-empty">ð æ²¡ææ¾å°å¹é <b>"' + search + '"</b> çé£ææéæ¹</div>'
+      : '<div class="empty-state"><div class="big-emoji">ð</div>è¿æ²¡æéæ¹ï¼å¿«æ¥åå»ºå§</div>'
+    return
+  }
+  document.getElementById('recipeList').innerHTML = groups.map(function(g) {
+    var isOpen = openIngredientGroups[g.ingredient]
+    var emoji = INGREDIENT_EMOJIS[g.ingredient] || 'ð´'
+    return '<div class="ingredient-group' + (isOpen ? ' open' : '') + '" id="ig-' + g.ingredient.replace(/[^a-zA-Z\u4e00-\u9fa5]/g,'') + '">'
+      + '<div class="ingredient-header" onclick="toggleIngredientGroup(\'' + g.ingredient.replace(/'/g,"\\'") + '\')">'
+      + '<div class="ingredient-name-row">'
+      + '<span class="ingredient-emoji">' + emoji + '</span>'
+      + '<span class="ingredient-label">' + g.ingredient + '</span>'
+      + '<span class="ingredient-count">' + g.count + 'ä¸ªéæ¹</span>'
+      + '</div>'
+      + '<span class="ingredient-arrow">â¼</span>'
+      + '</div>'
+      + '<div class="ingredient-recipes">'
+      + g.recipes.map(function(r) {
+        var ings = (r.ingredients || '').split(/[,ï¼]/).map(function(s) { return s.trim() }).filter(Boolean).slice(0, 3).join('ã')
+        if ((r.ingredients || '').split(/[,ï¼]/).filter(Boolean).length > 3) ings += '...'
+        return '<div class="ingredient-recipe-item">'
+          + '<span class="ingredient-recipe-name">' + r.name + '</span>'
+          + '<span class="ingredient-recipe-ingredients">' + ings + '</span>'
+          + '<div class="ingredient-recipe-actions">'
+          + '<button class="ir-btn" onclick="event.stopPropagation();editRecipe(' + r.id + ')" title="ç¼è¾">â</button>'
+          + '<button class="ir-btn del" onclick="event.stopPropagation();deleteRecipe(' + r.id + ')" title="å é¤">â</button>'
           + '</div>'
-
-      } else if (isPending && isMine) {
-
-        actions = '<div style="font-size:12px;color:#999;text-align:right">等待对方回应...</div>'
-
-      }
-
-      var recipeTag = ''
-
-      if (w.recipe_id) {
-
-        var r = recipes.find(function(rr) { return rr.id == w.recipe_id })
-
-        if (r) recipeTag = '<div class="wish-recipe-tag" onclick="showRecipeDetail(' + r.id + ')">📋 ' + r.name + '</div>'
-
-      }
-
-      return '<div class="wish-card">'
-
-        + '<div class="wish-top"><span class="wish-text">' + w.wish_text + '</span><span class="wish-status ' + w.status + '">' + statusLabel + '</span></div>'
-
-        + '<div class="wish-from">来自：' + w.from_user + '</div>'
-
-        + recipeTag + actions + '</div>'
-
-    }).join('')
-
-  }
-
-
-
-  var accepted = wishes.filter(function(w) { return w.status === 'accepted' })
-
-  var rejected = wishes.filter(function(w) { return w.status === 'rejected' })
-
-  var pending = wishes.filter(function(w) { return w.status === 'pending' })
-
-  if (accepted.length > 0 || rejected.length > 0) {
-
-    var verdictHTML = ''
-
-    if (accepted.length > 0) {
-
-      verdictHTML += '<div class="verdict">😋</div><div class="verdict-sub">' + accepted.map(function(w) { return w.wish_text }).join('、') + ' — 达成共识！</div>'
-
-    }
-
-    if (rejected.length > 0) {
-
-      verdictHTML += '<div style="margin-top:8px;font-size:14px;color:#999">❌ ' + rejected.map(function(w) { return w.wish_text }).join('、') + ' 被拒绝了</div>'
-
-    }
-
-    if (pending.length > 0) {
-
-      verdictHTML += '<div style="margin-top:8px;font-size:14px;color:#FF9800">⏳ ' + pending.map(function(w) { return w.wish_text }).join('、') + ' 等待回应</div>'
-
-    }
-
-    document.getElementById('wishResult').innerHTML = '<div class="wish-result"><h3>💝 心愿结果</h3>' + verdictHTML + '</div>'
-
-  } else {
-
-    document.getElementById('wishResult').innerHTML = ''
-
-  }
-
+          + '</div>'
+      }).join('')
+      + '</div>'
+      + '</div>'
+  }).join('')
 }
 
+function toggleIngredientGroup(ingredient) {
+  if (openIngredientGroups[ingredient]) {
+    delete openIngredientGroups[ingredient]
+  } else {
+    openIngredientGroups[ingredient] = true
+  }
+  var el = document.getElementById('ig-' + ingredient.replace(/[^a-zA-Z\u4e00-\u9fa5]/g,''))
+  if (el) el.classList.toggle('open')
+}
 
+// === å¿æ¿èªå¨èæ³ ===
+function onWishInput() {
+  var val = document.getElementById('wishInput').value.trim().toLowerCase()
+  var suggest = document.getElementById('autoSuggest')
+  if (!val || recipes.length === 0) {
+    suggest.classList.remove('show')
+    return
+  }
+  var matches = recipes.filter(function(r) {
+    return r.name.toLowerCase().indexOf(val) !== -1 || (r.ingredients || '').toLowerCase().indexOf(val) !== -1
+  }).slice(0, 5)
+  if (matches.length === 0) {
+    suggest.classList.remove('show')
+    return
+  }
+  suggest.innerHTML = matches.map(function(r) {
+    var ings = (r.ingredients || '').split(/[,ï¼]/).slice(0, 3).join('ã')
+    return '<div class="auto-suggest-item" onclick="selectRecipeSuggestion(' + r.id + ',\'' + r.name.replace(/'/g,"\\'") + '\')">'
+      + '<span>' + r.name + '</span>'
+      + '<span class="as-ingredients">' + ings + '</span>'
+      + '</div>'
+  }).join('')
+  suggest.classList.add('show')
+}
 
-// === 操作 ===
+function selectRecipeSuggestion(id, name) {
+  document.getElementById('wishInput').value = name
+  selectedRecipeId = id
+  document.getElementById('autoSuggest').classList.remove('show')
+  updateRecipeLabel()
+}
 
+document.addEventListener('click', function(e) {
+  var row = document.getElementById('wishInputRow')
+  if (row && !row.contains(e.target)) {
+    document.getElementById('autoSuggest').classList.remove('show')
+  }
+})
+
+// === å¿æ¿æ¸²æ ===
+function renderWishTab() {
+  var wishInput = document.getElementById('wishInput')
+  var currentVal = wishInput.value
+  if (wishes.length === 0) {
+    document.getElementById('wishList').innerHTML = '<div class="empty-state"><div class="big-emoji">ð</div>è¿æ²¡æå¿æ¿ï¼å¿«åä¸ä¸ªå§</div>'
+  } else {
+    document.getElementById('wishList').innerHTML = wishes.map(function(w) {
+      var isMine = w.from_user === myNick
+      var isPending = w.status === 'pending'
+      var statusLabel = w.status === 'pending' ? 'ç­å¾ä¸­' : (w.status === 'accepted' ? 'â æ³å' : 'â ä¸æ³å')
+      var actions = ''
+      if (isPending && !isMine) {
+        actions = '<div class="wish-actions">'
+          + '<button class="btn-accept" onclick="respondWish(' + w.id + ',\'accepted\')">ð æ³å</button>'
+          + '<button class="btn-reject" onclick="respondWish(' + w.id + ',\'rejected\')">ð ä¸æ³å</button>'
+          + '</div>'
+      } else if (isPending && isMine) {
+        actions = '<div style="font-size:12px;color:#999">ç­å¾å¯¹æ¹ååº...</div>'
+      }
+      var recipeInfo = ''
+      if (w.recipe_id) {
+        var recipe = recipes.find(function(r) { return r.id == w.recipe_id })
+        if (recipe) {
+          recipeInfo = '<div class="wish-recipe-info" onclick="toggleWishRecipe(event,' + w.id + ')">ð éæ¹ï¼' + recipe.name + ' â¸</div>'
+            + '<div class="wish-recipe-detail" id="wishRecipeDetail-' + w.id + '">'
+            + (recipe.ingredients || '').split(/[,ï¼]/).map(function(ing) { return 'ð¥ ' + ing.trim() }).join('<br>')
+            + '</div>'
+        }
+      }
+      return '<div class="wish-card">'
+        + '<div class="wish-top"><span class="wish-text">' + w.wish_text + '</span><span class="wish-status ' + w.status + '">' + statusLabel + '</span></div>'
+        + '<div class="wish-from">æ¥èªï¼' + w.from_user + '</div>'
+        + recipeInfo
+        + actions
+        + '<button class="wish-del" onclick="deleteWish(' + w.id + ')" title="å é¤å¿æ¿">â</button>'
+        + '</div>'
+    }).join('')
+  }
+  wishInput.value = currentVal
+  var accepted = wishes.filter(function(w) { return w.status === 'accepted' })
+  var rejected = wishes.filter(function(w) { return w.status === 'rejected' })
+  var pending = wishes.filter(function(w) { return w.status === 'pending' })
+  if (accepted.length > 0 || rejected.length > 0) {
+    var verdictHTML = ''
+    if (accepted.length > 0) {
+      verdictHTML += '<div class="verdict">ð</div><div class="verdict-sub">' + accepted.map(function(w) { return w.wish_text }).join('ã') + ' â è¾¾æå±è¯ï¼</div>'
+    }
+    if (rejected.length > 0) {
+      verdictHTML += '<div style="margin-top:8px;font-size:14px;color:#999">â ' + rejected.map(function(w) { return w.wish_text }).join('ã') + ' è¢«æç»äº</div>'
+    }
+    if (pending.length > 0) {
+      verdictHTML += '<div style="margin-top:8px;font-size:14px;color:#FF9800">â³ ' + pending.map(function(w) { return w.wish_text }).join('ã') + ' ç­å¾ååº</div>'
+    }
+    document.getElementById('wishResult').innerHTML = '<div class="wish-result"><h3>ð å¿æ¿ç»æ</h3>' + verdictHTML + '</div>'
+  } else {
+    document.getElementById('wishResult').innerHTML = ''
+  }
+}
+
+function toggleWishRecipe(e, wishId) {
+  e.stopPropagation()
+  var detail = document.getElementById('wishRecipeDetail-' + wishId)
+  if (detail) detail.classList.toggle('show')
+}
+
+// === Tab ===
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active') })
+  document.getElementById('orderTab').style.display = tab === 'order' ? 'block' : 'none'
+  document.getElementById('recipeTab').style.display = tab === 'recipe' ? 'block' : 'none'
+  document.getElementById('wishTab').style.display = tab === 'wish' ? 'block' : 'none'
+  document.getElementById('bottomBar').style.display = tab === 'order' ? 'block' : 'none'
+  var idx = tab === 'order' ? 0 : (tab === 'recipe' ? 1 : 2)
+  document.querySelectorAll('.tab')[idx].classList.add('active')
+  if (tab === 'wish') document.getElementById('autoSuggest').classList.remove('show')
+}
+
+// === èåæä½ ===
 function selectCat(cat) { activeCat = cat; renderOrderTab() }
 
-
-
-async function deleteDish(dishId, dishName) {
-
-  if (!confirm('确定要删除「' + dishName + '」吗？关联的已点数量也会被清除。')) return
-
-  try {
-
-    await sbApi('DELETE', '/orders?dish_id=eq.' + dishId)
-
-    await sbApi('DELETE', '/dishes?id=eq.' + dishId)
-
-  } catch(e) { return toast('删除失败，请重试') }
-
-  loadAll()
-
-}
-
-
-
 async function changeQty(dishId, delta) {
-
   var cur = orders[dishId] || 0
-
   var nxt = Math.max(0, cur + delta)
-
   try {
-
     if (nxt === 0) {
-
       await sbApi('DELETE', '/orders?dish_id=eq.' + dishId)
-
     } else {
-
       await sbApi('POST', '/orders', { dish_id: dishId, quantity: nxt, updated_by: myNick, updated_at: new Date().toISOString() })
-
     }
-
-  } catch(e) { return toast('操作失败，请重试') }
-
+  } catch(e) { return toast('æä½å¤±è´¥ï¼è¯·éè¯') }
   loadAll()
-
 }
 
-
-
-function switchTab(tab) {
-
-  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active') })
-
-  document.getElementById('orderTab').style.display = tab === 'order' ? 'block' : 'none'
-
-  document.getElementById('recipeTab').style.display = tab === 'recipe' ? 'block' : 'none'
-
-  document.getElementById('wishTab').style.display = tab === 'wish' ? 'block' : 'none'
-
-  document.getElementById('bottomBar').style.display = tab === 'order' ? 'block' : 'none'
-
-
-
-  var tabs = document.querySelectorAll('.tab')
-
-  if (tab === 'order') tabs[0].classList.add('active')
-
-  else if (tab === 'recipe') tabs[1].classList.add('active')
-
-  else tabs[2].classList.add('active')
-
-}
-
-
-
-// === 配方操作 ===
-
-function showAddRecipe() {
-
-  editingRecipeId = null
-
-  document.getElementById('recipeModalTitle').textContent = '创建配方'
-
-  document.getElementById('recipeName').value = ''
-
-  document.getElementById('recipeIngredients').value = ''
-
-  document.getElementById('recipeModal').classList.remove('hidden')
-
-}
-
-
-
-function editRecipe(id) {
-
-  var r = recipes.find(function(rr) { return rr.id == id })
-
-  if (!r) return
-
-  editingRecipeId = id
-
-  document.getElementById('recipeModalTitle').textContent = '编辑配方'
-
-  document.getElementById('recipeName').value = r.name
-
-  document.getElementById('recipeIngredients').value = r.ingredients
-
-  document.getElementById('recipeModal').classList.remove('hidden')
-
-}
-
-
-
-function hideRecipeModal() {
-
-  document.getElementById('recipeModal').classList.add('hidden')
-
-}
-
-
-
-async function saveRecipe() {
-
-  var name = document.getElementById('recipeName').value.trim()
-
-  var ingredients = document.getElementById('recipeIngredients').value.trim()
-
-  if (!name) return toast('请输入配方名')
-
-  if (!ingredients) return toast('请输入食材列表')
-
+async function deleteDish(dishId) {
+  var dish = dishes.find(function(d) { return d.id == dishId })
+  if (!dish) return
+  if (!confirm('ç¡®å®å é¤èåã' + dish.name + 'ãåï¼å é¤åä¸å¯æ¢å¤ã')) return
   try {
-
-    if (editingRecipeId) {
-
-      await sbApi('PATCH', '/recipes?id=eq.' + editingRecipeId, { name: name, ingredients: ingredients })
-
-    } else {
-
-      await sbApi('POST', '/recipes', { name: name, ingredients: ingredients, created_by: myNick })
-
-    }
-
-  } catch(e) { return toast('保存失败，请重试') }
-
-  editingRecipeId = null
-
-  hideRecipeModal()
-
+    await Promise.all([
+      sbApi('DELETE', '/dishes?id=eq.' + dishId),
+      sbApi('DELETE', '/orders?dish_id=eq.' + dishId)
+    ])
+  } catch(e) { return toast('å é¤å¤±è´¥ï¼è¯·éè¯') }
   loadAll()
-
 }
-
-
-
-async function deleteRecipe(id) {
-
-  if (!confirm('确定删除这个配方吗？')) return
-
-  try {
-
-    await sbApi('DELETE', '/recipes?id=eq.' + id)
-
-  } catch(e) { return toast('删除失败，请重试') }
-
-  loadAll()
-
-}
-
-
-
-// === 配方选择器 ===
-
-function showRecipeSelector() {
-
-  var list = document.getElementById('recipeSelectorList')
-
-  var html = '<div class="recipe-option no-recipe' + (selectedRecipeId === null ? ' selected' : '') + '" onclick="selectRecipe(null)">不绑定配方</div>'
-
-  recipes.forEach(function(r) {
-
-    html += '<div class="recipe-option' + (selectedRecipeId === r.id ? ' selected' : '') + '" onclick="selectRecipe(' + r.id + ')">'
-
-      + '<div><div class="opt-name">' + r.name + '</div><div class="opt-ing">' + r.ingredients.slice(0,40) + (r.ingredients.length>40?'...':'') + '</div></div>'
-
-      + (selectedRecipeId === r.id ? '<span style="color:#E91E63;font-size:20px">✓</span>' : '')
-
-      + '</div>'
-
-  })
-
-  list.innerHTML = html
-
-  document.getElementById('recipeSelectorModal').classList.remove('hidden')
-
-}
-
-
-
-function hideRecipeSelector() {
-
-  document.getElementById('recipeSelectorModal').classList.add('hidden')
-
-}
-
-
-
-function selectRecipe(id) {
-
-  selectedRecipeId = id
-
-  if (id) {
-
-    var r = recipes.find(function(rr) { return rr.id == id })
-
-    document.getElementById('selectedRecipeLabel').textContent = r ? r.name : '不绑定配方'
-
-  } else {
-
-    document.getElementById('selectedRecipeLabel').textContent = '不绑定配方'
-
-  }
-
-  hideRecipeSelector()
-
-}
-
-
-
-function showRecipeDetail(id) {
-
-  var r = recipes.find(function(rr) { return rr.id == id })
-
-  if (!r) return
-
-  var ings = r.ingredients.split(',').map(function(i) { return i.trim() }).join('\n')
-
-  alert('📋 ' + r.name + '\n\n食材：\n' + ings + '\n\n创建者：' + r.created_by)
-
-}
-
-
-
-// === 心愿操作 ===
-
-async function sendWish() {
-
-  var text = document.getElementById('wishInput').value.trim()
-
-  if (!text) return toast('请输入想吃的东西')
-
-  var body = { wish_text: text, from_user: myNick, status: 'pending' }
-
-  if (selectedRecipeId) body.recipe_id = selectedRecipeId
-
-  try {
-
-    await sbApi('POST', '/wishes', body)
-
-  } catch(e) { return toast('发送失败，请重试') }
-
-  document.getElementById('wishInput').value = ''
-
-  selectedRecipeId = null
-
-  document.getElementById('selectedRecipeLabel').textContent = '不绑定配方'
-
-  loadAll()
-
-}
-
-
-
-async function respondWish(id, status) {
-
-  try {
-
-    await sbApi('PATCH', '/wishes?id=eq.' + id, { status: status, responded_by: myNick })
-
-  } catch(e) { return toast('操作失败，请重试') }
-
-  loadAll()
-
-}
-
-
-
-// === 菜品自定义 ===
 
 function showAddDish() { document.getElementById('dishModal').classList.remove('hidden') }
-
 function hideAddDish() { document.getElementById('dishModal').classList.add('hidden') }
 
-
-
 async function addCustomDish() {
-
   var name = document.getElementById('newDishName').value.trim()
-
-  var price = parseFloat(document.getElementById('newDishPrice').value)
-
   var cat = document.getElementById('newDishCat').value
-
-  if (!name || isNaN(price) || price < 0) return toast('请填写完整的菜品信息')
-
+  if (!name) return toast('è¯·å¡«åèå')
   try {
-
-    await sbApi('POST', '/dishes', { name: name, price: price, category: cat, created_by: myNick })
-
-  } catch(e) { return toast('添加失败，请重试') }
-
+    await sbApi('POST', '/dishes', { name: name, category: cat, created_by: myNick })
+  } catch(e) { return toast('æ·»å å¤±è´¥ï¼è¯·éè¯') }
   document.getElementById('newDishName').value = ''
-
-  document.getElementById('newDishPrice').value = ''
-
   hideAddDish()
-
   loadAll()
-
 }
 
+// === éæ¹æä½ ===
+function showRecipeModal(id) {
+  editingRecipeId = id || null
+  document.getElementById('recipeModalTitle').textContent = id ? 'ç¼è¾éæ¹' : 'æ°å»ºéæ¹'
+  document.getElementById('recipeName').value = ''
+  document.getElementById('recipeIngredients').value = ''
+  if (id) {
+    var recipe = recipes.find(function(r) { return r.id == id })
+    if (recipe) {
+      document.getElementById('recipeName').value = recipe.name
+      document.getElementById('recipeIngredients').value = recipe.ingredients
+    }
+  }
+  document.getElementById('recipeModal').classList.remove('hidden')
+}
 
+function hideRecipeModal() {
+  document.getElementById('recipeModal').classList.add('hidden')
+  editingRecipeId = null
+}
+
+function editRecipe(id) { showRecipeModal(id) }
+
+async function saveRecipe() {
+  var name = document.getElementById('recipeName').value.trim()
+  var ingredients = document.getElementById('recipeIngredients').value.trim()
+  if (!name || !ingredients) return toast('è¯·å¡«åéæ¹ååé£æåè¡¨')
+  try {
+    if (editingRecipeId) {
+      await sbApi('PATCH', '/recipes?id=eq.' + editingRecipeId, { name: name, ingredients: ingredients })
+    } else {
+      await sbApi('POST', '/recipes', { name: name, ingredients: ingredients, created_by: myNick })
+    }
+  } catch(e) { return toast('ä¿å­å¤±è´¥ï¼è¯·éè¯') }
+  hideRecipeModal()
+  loadAll()
+}
+
+async function deleteRecipe(id) {
+  var recipe = recipes.find(function(r) { return r.id == id })
+  if (!recipe) return
+  if (!confirm('ç¡®å®å é¤éæ¹ã' + recipe.name + 'ãåï¼')) return
+  try {
+    await sbApi('DELETE', '/recipes?id=eq.' + id)
+  } catch(e) { return toast('å é¤å¤±è´¥ï¼è¯·éè¯') }
+  loadAll()
+}
+
+// === å¿æ¿æä½ ===
+function updateRecipeLabel() {
+  var label = document.getElementById('selectedRecipeLabel')
+  if (selectedRecipeId) {
+    var recipe = recipes.find(function(r) { return r.id == selectedRecipeId })
+    if (recipe) {
+      label.innerHTML = '<span class="selected-recipe">ð ' + recipe.name + ' <span class="clear-recipe" onclick="clearRecipeSelection()">â</span></span>'
+      label.style.display = 'inline'
+      return
+    }
+  }
+  label.style.display = 'none'
+}
+
+function clearRecipeSelection() { selectedRecipeId = null; updateRecipeLabel(); hideRecipeSelector() }
+
+async function sendWish() {
+  var text = document.getElementById('wishInput').value.trim()
+  if (!text) return toast('è¯·è¾å¥æ³åçä¸è¥¿')
+  var body = { wish_text: text, from_user: myNick, status: 'pending' }
+  if (selectedRecipeId) body.recipe_id = selectedRecipeId
+  try { await sbApi('POST', '/wishes', body) } catch(e) { return toast('åéå¤±è´¥ï¼è¯·éè¯') }
+  document.getElementById('wishInput').value = ''
+  selectedRecipeId = null
+  updateRecipeLabel()
+  loadAll()
+}
+
+async function respondWish(id, status) {
+  try { await sbApi('PATCH', '/wishes?id=eq.' + id, { status: status, responded_by: myNick }) } catch(e) { return toast('æä½å¤±è´¥ï¼è¯·éè¯') }
+  loadAll()
+}
+
+async function deleteWish(id) {
+  var wish = wishes.find(function(w) { return w.id == id })
+  if (!wish) return
+  if (!confirm('ç¡®å®å é¤å¿æ¿ã' + wish.wish_text + 'ãåï¼')) return
+  try { await sbApi('DELETE', '/wishes?id=eq.' + id) } catch(e) { return toast('å é¤å¤±è´¥ï¼è¯·éè¯') }
+  loadAll()
+}
+
+// === éæ¹éæ©å¨ ===
+function showRecipeSelector() {
+  document.getElementById('recipeSelectSearch').value = ''
+  renderRecipeSelectItems()
+  document.getElementById('recipeSelector').classList.remove('hidden')
+}
+
+function hideRecipeSelector() { document.getElementById('recipeSelector').classList.add('hidden') }
+
+function renderRecipeSelectItems() {
+  var search = (document.getElementById('recipeSelectSearch').value || '').toLowerCase()
+  var filtered = search ? recipes.filter(function(r) {
+    return r.name.toLowerCase().indexOf(search) !== -1 || (r.ingredients || '').toLowerCase().indexOf(search) !== -1
+  }) : recipes
+  document.getElementById('recipeSelectItems').innerHTML = filtered.map(function(r) {
+    var sel = selectedRecipeId === r.id ? ' selected' : ''
+    return '<div class="recipe-select-item' + sel + '" onclick="selectRecipeFromPicker(' + r.id + ')">'
+      + '<div><div class="rsi-name">' + r.name + '</div><div class="rsi-ingredients">' + (r.ingredients || '').split(/[,ï¼]/).slice(0,4).join('ã') + '</div></div>'
+      + '<div class="rsi-check">' + (sel ? 'â' : '') + '</div>'
+      + '</div>'
+  }).join('') || '<div style="padding:20px;text-align:center;color:#999">ææ å¹ééæ¹</div>'
+}
+
+function selectRecipeFromPicker(id) { selectedRecipeId = id; updateRecipeLabel(); hideRecipeSelector() }
 
 function toast(msg) {
-
   var t = document.getElementById('toast')
-
   t.textContent = msg
-
   t.classList.add('show')
-
   setTimeout(function() { t.classList.remove('show') }, 2000)
-
 }
 
-
-
 init()
-
 </script>
-
 </body>
-
 </html>
